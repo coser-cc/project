@@ -4,6 +4,7 @@ import com.java.gateway.filter.NoOpServerSecurityContextAutoRepository;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -24,27 +25,17 @@ public class SecurityWebfluxConfig {
                 .formLogin().disable()
                 .logout().disable();
         http
-                .authorizeExchange().matchers(EndpointRequest.to("health", "info")).permitAll()
-                .and()
-                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .and()
-                .authorizeExchange().pathMatchers(HttpMethod.PUT).denyAll()
-                .and()
-                .authorizeExchange().pathMatchers(HttpMethod.DELETE).denyAll()
-                .and()
-                .authorizeExchange().pathMatchers(HttpMethod.HEAD).denyAll()
-                .and()
-                .authorizeExchange().pathMatchers(HttpMethod.PATCH).denyAll()
-                .and()
-                .authorizeExchange().pathMatchers(HttpMethod.TRACE).denyAll()
-                .and()
-                .authorizeExchange().pathMatchers(excludedAuthPages).permitAll()
-                .and()
-                .authorizeExchange().pathMatchers(authenticatedPages).authenticated()
-                .and()
-                .authorizeExchange().pathMatchers("/**").access(new JwtAuthorizationManager(tokenProvider))
-                .and()
-                .anyExchange().authenticated();
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.matchers(EndpointRequest.to("health", "info")).permitAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(HttpMethod.OPTIONS).permitAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(HttpMethod.PUT).denyAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(HttpMethod.DELETE).denyAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(HttpMethod.HEAD).denyAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(HttpMethod.PATCH).denyAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(HttpMethod.TRACE).denyAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(excludedAuthPages).permitAll())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(authenticatedPages).authenticated())
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers("/**").access(new JwtAuthorizationManager(tokenProvider)))
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.anyExchange().authenticated());
         http
                 .securityContextRepository(new NoOpServerSecurityContextAutoRepository(tokenProvider))
                 .exceptionHandling().accessDeniedHandler(new AccessDeniedEntryPointd())
