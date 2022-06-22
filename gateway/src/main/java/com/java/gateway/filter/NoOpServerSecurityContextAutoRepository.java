@@ -13,11 +13,6 @@ import java.util.Collections;
 
 @Component
 public class NoOpServerSecurityContextAutoRepository implements ServerSecurityContextRepository {
-    private TokenProvider tokenProvider;
-
-    public NoOpServerSecurityContextAutoRepository(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
 
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
