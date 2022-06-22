@@ -35,11 +35,10 @@ public class SecurityWebfluxConfig {
     @Bean
     SecurityWebFilterChain webFluxSecurityFilterChain(ServerHttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .cors().disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .logout().disable();
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .logout(ServerHttpSecurity.LogoutSpec::disable);
         http
                 .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.matchers(EndpointRequest.to("health", "info")).permitAll())
                 .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers(HttpMethod.OPTIONS).permitAll())
@@ -55,7 +54,6 @@ public class SecurityWebfluxConfig {
         http
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
                 .securityContextRepository(new NoOpServerSecurityContextAutoRepository())
-//                .exceptionHandling().accessDeniedHandler(new AccessDeniedEntryPointd())
                 .addFilterAt(webFilter(), SecurityWebFiltersOrder.AUTHORIZATION);
         return http.build();
     }
