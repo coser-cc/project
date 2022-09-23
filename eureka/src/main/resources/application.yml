@@ -3,8 +3,13 @@ server:
 spring:
   application:
     name: eureka
+  main:
+    banner-mode: off
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+logging:
+  level:
+    root: error
