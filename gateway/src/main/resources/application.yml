@@ -3,8 +3,20 @@ server:
 spring:
   application:
     name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
 
 eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
+
+logging:
+  level:
+    com.netflix: error
+    org: error
