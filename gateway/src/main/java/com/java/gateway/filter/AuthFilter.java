@@ -1,6 +1,7 @@
 package com.java.gateway.filter;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -27,7 +28,12 @@ public class AuthFilter implements WebFilter {
         String url = request.getURI().getPath();
         // 请求头
         HttpHeaders headers = request.getHeaders();
-        request.getHeaders().add("type", "");
+        // 参数方式
+        MediaType contentType = headers.getContentType();
+        // json格式数据全部进行解密
+        if (MediaType.APPLICATION_JSON.equals(contentType) || MediaType.APPLICATION_JSON_UTF8.equals(contentType)) {
+
+        }
         return chain.filter(exchange);
     }
 }
