@@ -21,19 +21,7 @@ public class SecurityWebfluxConfig {
                 // 禁用 CSRF
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 // 配置 CORS 策略
-                .cors(corsSpec -> corsSpec.configurationSource(exchange -> {
-                    CorsConfiguration config = new CorsConfiguration();
-                    config.addAllowedOrigin("*");
-                    // 允许提交的请求头，*表示全部允许
-                    config.addAllowedHeader("*");
-                    // 允许提交的请求方法，*表示全部允许
-                    config.addAllowedMethod("*");
-                    // 允许cookies跨域
-                    config.setAllowCredentials(true);
-                    // 预检请求的缓存时间（秒），即在这个时间段里，对于相同的跨域请求不会再预检了
-                    config.setMaxAge(18000L);
-                    return config;
-                }))
+                .cors(ServerHttpSecurity.CorsSpec::disable)
                 // WebFlux 应用程序中的安全上下文存储在 ServerSecurityContextRepository 中，配置 NoOpServerSecurityContextRepository 会使我们的应用程序无状态
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
