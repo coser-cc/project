@@ -12,6 +12,7 @@
     <modules>
         <module>eureka</module>
         <module>gateway</module>
+        <module>gateway-security</module>
     </modules>
 
     <properties>

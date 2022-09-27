@@ -1,18 +1,14 @@
 package com.java.gateway.filter;
 
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-@Component
-public class AuthFilter implements GlobalFilter, Ordered {
+public class AuthFilter implements WebFilter {
 
     /**
      * Process the Web request and (optionally) delegate to the next
@@ -23,7 +19,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
      * @return {@code Mono<Void>} to indicate when request processing is complete
      */
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         // 获取请求
         ServerHttpRequest request = exchange.getRequest();
         // 请求方式
@@ -39,10 +35,5 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         }
         return chain.filter(exchange);
-    }
-
-    @Override
-    public int getOrder() {
-        return Integer.MIN_VALUE;
     }
 }
